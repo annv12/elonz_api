@@ -59,7 +59,7 @@ async function handleTransaction(transaction: ethers.TransactionReceipt) {
           createdAt: new Date(
             Number(dataLog.args['timestamp']) * 1000,
           ).toISOString(),
-          wallet: dataLog.args['account'],
+          wallet: ethers.getAddress(dataLog.args['account']),
           amountBnb,
           amountUsd: Number(ethers.formatEther(dataLog.args['amountUsd'])),
           amountToken: Number(ethers.formatEther(dataLog.args['amountToken'])),
@@ -76,8 +76,8 @@ async function handleTransaction(transaction: ethers.TransactionReceipt) {
           createdAt: new Date(
             Number(dataLog.args['timestamp']) * 1000,
           ).toISOString(),
-          user: dataLog.args['sponsor'],
-          ref: dataLog.args['user'],
+          user: ethers.getAddress(dataLog.args['sponsor']),
+          ref: ethers.getAddress(dataLog.args['user']),
           amount,
           action: 'REWARD',
           price: Number(ethers.formatEther(await idoContract.priceUsd())),
@@ -92,8 +92,8 @@ async function handleTransaction(transaction: ethers.TransactionReceipt) {
           createdAt: new Date(
             Number(dataLog.args['timestamp']) * 1000,
           ).toISOString(),
-          user: dataLog.args['user'],
-          ref: dataLog.args['user'],
+          user: ethers.getAddress(dataLog.args['user']),
+          ref: ethers.getAddress(dataLog.args['user']),
           amount,
           amountBnb: Number(ethers.formatEther(dataLog.args['amountBnb'])),
           action: 'CLAIM',
@@ -108,7 +108,7 @@ async function handleTransaction(transaction: ethers.TransactionReceipt) {
           createdAt: new Date(
             Number(dataLog.args['timestamp']) * 1000,
           ).toISOString(),
-          wallet: dataLog.args['user'],
+          wallet: ethers.getAddress(dataLog.args['user']),
           amountBnb: 0,
           amountUsd: Number(ethers.formatEther(dataLog.args['amountUsd'])),
           amountToken: Number(ethers.formatEther(dataLog.args['amountToken'])),

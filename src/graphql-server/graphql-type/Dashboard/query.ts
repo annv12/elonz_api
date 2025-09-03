@@ -1,7 +1,6 @@
-import { extendType, stringArg, intArg, objectType, nonNull } from 'nexus'
+import { extendType, stringArg, intArg,  nonNull } from 'nexus'
 import 'dotenv/config'
 
-import { getCoinBalance } from '../../utils'
 import {
   AccountOverview,
   AggregatePayload,
@@ -21,24 +20,24 @@ export const UserQuery = extendType({
     t.field('accountOverview', {
       type: AccountOverview,
       args: {
-        wallet: nonNull(stringArg()),
+        account: nonNull(stringArg()),
       },
-      resolve: async (_, { wallet }, ctx) => {
+      resolve: async (_, { account }, ctx) => {
         try {
           const contract = getIdoContract()
           const balance = Number(
-            ethers.formatEther(await contract.buyAmount(wallet)),
+            ethers.formatEther(await contract.buyAmount(account)),
           )
           return {
             balance: balance.toString(),
             tokenWorth: (balance * 0.005).toString(),
-            address: wallet,
+            address: account,
           }
         } catch (error) {
           return {
             balance: '0',
             tokenWorth: '0',
-            address: wallet,
+            address: account,
           }
         }
       },
@@ -101,8 +100,8 @@ export const UserQuery = extendType({
 
     t.field('myPlace', {
       type: Place,
-      args: { address: stringArg() },
-      resolve: async (_, { address }, ctx) => {
+      args: { account: stringArg() },
+      resolve: async (_, { account }, ctx) => {
         const data = await ctx.prisma.ido.groupBy({
           by: ['wallet'],
           _sum: {
@@ -114,12 +113,12 @@ export const UserQuery = extendType({
             },
           },
         })
-        const index = data.findIndex((item) => item.wallet == address)
+        const index = data.findIndex((item) => item.wallet == account)
         console.log('🚀 ~ index:', index)
         return index == -1
-          ? { wallet: address, amount: '0', place: '0' }
+          ? { wallet: account, amount: '0', place: '0' }
           : {
-              wallet: address,
+              wallet: account,
               amount: data[index]._sum.amountToken.toString(),
               place: index + 1,
             }
@@ -128,10 +127,10 @@ export const UserQuery = extendType({
 
     t.list.field('transactions', {
       type: TransactionItem,
-      args: { address: nonNull(stringArg()), limit: intArg(), skip: intArg() },
-      resolve: async (_, { address, limit = 10, skip = 0 }, ctx) => {
+      args: { account: nonNull(stringArg()), limit: intArg(), skip: intArg() },
+      resolve: async (_, { account, limit = 10, skip = 0 }, ctx) => {
         const data = await ctx.prisma.ido.findMany({
-          where: { wallet: ethers.getAddress(address) },
+          where: { wallet: ethers.getAddress(account) },
           orderBy: {
             createdAt: 'desc',
           },
@@ -153,10 +152,10 @@ export const UserQuery = extendType({
     })
     t.field('transactionAggregate', {
       type: AggregatePayload,
-      args: { address: nonNull(stringArg()) },
-      resolve: async (_, { address }, ctx) => {
+      args: { account: nonNull(stringArg()) },
+      resolve: async (_, { account }, ctx) => {
         const count = await ctx.prisma.ido.count({
-          where: { wallet: address },
+          where: { wallet: account },
         })
         return { count }
       },
@@ -164,13 +163,13 @@ export const UserQuery = extendType({
 
     t.field('refferalsOverview', {
       type: RefferalsOverview,
-      args: { address: nonNull(stringArg()) },
-      resolve: async (_, { address }, ctx) => {
+      args: { account: nonNull(stringArg()) },
+      resolve: async (_, { account }, ctx) => {
         const contract = getIdoContract()
         const [raisedViaRef, balance, referrals] = await Promise.all([
-          contract.raisedRef(address),
-          contract.refRewards(address),
-          contract.countRef(address),
+          contract.raisedRef(account),
+          contract.refRewards(account),
+          contract.countRef(account),
         ])
         return {
           raisedViaRef: ethers.formatEther(raisedViaRef),
