@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       script: "npm",
-      name: 'tiny pasture server',
+      name: 'elonz server',
       automation: false,
       args: "run start"
     }

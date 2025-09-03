@@ -23,7 +23,7 @@ app.use(express.json())
 app.get('/test', (req, res) => {
   res.json({ error: false, messge:'test trigger' })
 })
-app.post('/stream', monitorIdo)
+app.post('/0f38b5aa-8e54-46f6-8464-8afc30976243/stream', monitorIdo)
 
 app.use('/', graphqlServer)
 
