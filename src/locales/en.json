@@ -1,0 +1,7 @@
+{
+	"some_error": "Some error occurred, Please try again later",
+	"user_not_login": "Cannot find user please login again",
+	"user_not_found": "User not found",
+	"gt0_error": "Number of {field} must be greater than 0",
+	"not_enough": "Not enough {field}"
+}
