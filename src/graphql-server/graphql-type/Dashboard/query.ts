@@ -57,7 +57,7 @@ export const UserQuery = extendType({
           tokensSold: ethers.formatEther(tokensSold),
           price: curPrice,
           nextPrice: getNextPrice(curPrice),
-          stage: `Stage ${stages[curPrice]}`,
+          stage: stages[curPrice],
         }
       },
     })
@@ -138,7 +138,7 @@ export const UserQuery = extendType({
           take: limit,
         })
         return data.map((item) => ({
-          stage: `Stage ${stages[item.price.toString()]}`,
+          stage: stages[item.price.toString()],
           investedAmount: (item.action == 'BUY_BNB'
             ? item.amountBnb
             : item.amountUsd
