@@ -94,7 +94,7 @@ async function handleTransaction(transaction: ethers.TransactionReceipt) {
           ).toISOString(),
           user: ethers.getAddress(dataLog.args['user']),
           ref: ethers.getAddress(dataLog.args['user']),
-          amount,
+          amount: -amount,
           amountBnb: Number(ethers.formatEther(dataLog.args['amountBnb'])),
           action: 'CLAIM',
           price: Number(ethers.formatEther(await idoContract.priceUsd())),
